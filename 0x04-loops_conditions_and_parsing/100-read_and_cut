@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# a Bash script that displays the content of the file /etc/passwd.
+# Your script should only display:
+#    username
+#    user id
+#    Home directory path for the user
+
+exec 3< /etc/passwd
+while read -u 3 line; do
+    username=$(echo "$line" | cut -d: -f1)
+    uid=$(echo "$line" | cut -d: -f3)
+    home=$(echo "$line" | cut -d: -f6)
+    echo "Username: $username"
+    echo "User ID: $uid"
+    echo "Home Directory: $home"
+done
+
+exec 3<&-
