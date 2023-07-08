@@ -1,26 +1,19 @@
 #!/usr/bin/env bash
 # Shows information about subdomains.
 
-get_record_info() {
-  local domain="$1"
-  local subdomain="$2"
-
-  dig_output=$(dig "$subdomain.$domain" | awk '/^'${subdomain}.${domain}'\./{flag=1;next}/^$/{flag=0}flag')
-
-  record_type=$(echo "$dig_output" | awk '{print $4}')
-  destination=$(echo "$dig_output" | awk '{print $5}')
-
-  echo "The subdomain ${subdomain} is a ${record_type} record and points to ${destination}"
+domain_information() {
+    local domain="$1"
+    local subdomain="$2"
+    local line
+    line=$(dig "$subdomain"."$domain" | awk '/ANSWER SECTION:/ {getline; print; getline; print}')
+    echo "$subdomain $line" | awk '{printf "The subdomain %s is a %s record and points to %s\n", $1, $2, $3}'
 }
 
-domain="$1"
-subdomain="$2"
-
-if [ -z "$subdomain" ]; then
-  get_record_info "$domain" "www"
-  get_record_info "$domain" "lb-01"
-  get_record_info "$domain" "web-01"
-  get_record_info "$domain" "web-02"
-else
-  get_record_info "$domain" "$subdomain"
+if [ "$#" -eq 1 ]; then
+    domain_information "$1" "www"
+    domain_information "$1" "lb-01"
+    domain_information "$1" "web-01"
+    domain_information "$1" "web-02"
+elif [ "$#" -eq 2 ]; then
+    domain_information "$1" "$2"
 fi
