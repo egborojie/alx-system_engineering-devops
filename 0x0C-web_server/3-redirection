@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# A bash script that installs nginx on an ubuntu machine.
-# This scripts also configures the default webpage served to be "Hello World!
-# When request url matches /redirect_me, it redirects to my github homepage.
+# A bash script that installs nginx on an Ubuntu machine.
+# This script also configures the default webpage served to be "Hello World!"
+# When the request URL matches /redirectme, it redirects to my GitHub homepage.
 
 sudo apt-get update -y
 
@@ -9,11 +9,7 @@ sudo apt-get install nginx -y
 
 echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 
-
-
-
-
-string_for_replacement="server_name _;\n\trewrite ^\/redirectme https:\/\/github.com\/egborojie permarnent;"
+string_for_replacement="server_name _;\n\trewrite ^\/redirectme https:\/\/github.com\/egborojie permanent;"
 
 sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
